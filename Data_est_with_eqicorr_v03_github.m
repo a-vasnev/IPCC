@@ -102,24 +102,24 @@ sigma2_hat_0 = spline(r_set, sigma2_hat_set, r_0); % corresponds to \sigma_0 in 
 tau2_hat_0 = spline(r_set, tau2_hat_set, r_0); % corresponds to \tau in the table
 
 % create Table 5 for the paper
-my_table5 = [r_0 mu_hat_0 sqrt(sigma2_hat_0) sqrt(tau2_hat_0)];
-my_table5 = [my_table5; ...
+my_table6 = [r_0 mu_hat_0 sqrt(sigma2_hat_0) sqrt(tau2_hat_0)];
+my_table6 = [my_table6; ...
              lim_r lim_mu sqrt(lim_sigma2) sqrt(lim_tau2)];
 
 % display table with 2 decimals for the paper
-my_table5_rounded = round(my_table5, 2);
+my_table6_rounded = round(my_table6, 2);
 if caseN == 14
-    disp("Table 5: IPCC5");
+    disp("Table 6: IPCC5");
 elseif caseN == 4
-    disp("Table 5: IPCC6");
+    disp("Table 6: IPCC6");
 else
     error("not implemented yet")
 end
-disp(my_table5_rounded);
+disp(my_table6_rounded);
 
-%% output produced by Matlab R2024b on MacBook
+%% output produced by Matlab R2024b on MacBook and on PC
 
-% Table 5: IPCC5
+% Table 6: IPCC5
 %       0    1.07    0.27    0.04
 %    0.50    1.20    0.32    0.06
 %    0.60    1.21    0.35    0.06
@@ -131,7 +131,7 @@ disp(my_table5_rounded);
 %    0.99    1.23    2.13    0.06
 %    1.00    1.23     Inf    0.06
 
-% Table 5: IPCC6
+% Table 6: IPCC6
 %        0    1.11    0.10    0.04
 %     0.50    1.10    0.13    0.09
 %     0.60    1.09    0.15    0.10
@@ -142,6 +142,48 @@ disp(my_table5_rounded);
 %     0.95    1.03    0.42    0.19
 %     0.99    1.01    0.92    0.21
 %     1.00    1.00     Inf    0.22
+
+%% create Table 6 for the paper
+
+if caseN == 14
+    b_2 = 1.07;
+    sigma_2 = 0.53;
+elseif caseN == 4
+    b_2 = 1.15;
+    sigma_2 = 0.27;
+else
+    error("not implemented yet")
+end
+
+sigma_1 = sqrt((sigma2_hat_0(end-2:end)*sigma_2^2)./(sigma2_hat_0(end-2:end)-sigma_2^2));
+b_1 = (sigma2_hat_0(end-2:end)*b_2-sigma_2^2*mu_hat_0(end-2:end))./(sigma2_hat_0(end-2:end)-sigma_2^2);
+
+my_table7 = [r_0(end-2:end) b_1 sigma_1];
+my_table7 = [my_table7; ...
+             lim_r b_2 sigma_2];
+my_table7_rounded = round(my_table7, 2);
+if caseN == 14
+    disp("Table 7: IPCC5 prior");
+elseif caseN == 4
+    disp("Table 7: IPCC6 prior");
+else
+    error("not implemented yet")
+end
+disp(my_table7_rounded);
+
+%% output produced by Matlab R2024b on MacBook
+
+% Table 7: IPCC5 prior
+%     0.90    0.83    0.85
+%     0.95    1.00    0.64
+%     0.99    1.06    0.55
+%     1.00    1.07    0.53
+
+% Table 7: IPCC6 prior
+%     0.90    1.66    0.67    
+%     0.95    1.24    0.36    
+%     0.99    1.16    0.28    
+%     1.00    1.15    0.27    
 
 %% functions
 
