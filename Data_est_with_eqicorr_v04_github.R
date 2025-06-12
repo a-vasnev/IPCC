@@ -128,15 +128,15 @@ mu_hat_0 <- spline(r_set, mu_hat_set, xout = r_0)$y
 sigma2_hat_0 <- spline(r_set, sigma2_hat_set, xout = r_0)$y
 tau2_hat_0 <- spline(r_set, tau2_hat_set, xout = r_0)$y
 
-my_table5 <- rbind(
+my_table6 <- rbind(
   cbind(r_0, mu_hat_0, sqrt(sigma2_hat_0), sqrt(tau2_hat_0)),
   c(lim_r, lim_mu, sqrt(lim_sigma2), sqrt(lim_tau2))
 )
 
-colnames(my_table5) <- c("rho", "b_0", "sigma_0", "tau")
-my_table5 <- as.data.frame(my_table5)
+colnames(my_table6) <- c("rho", "b_0", "sigma_0", "tau")
+my_table6 <- as.data.frame(my_table6)
 
-my_table5_rounded <- round(my_table5, 2)
+my_table6_rounded <- round(my_table6, 2)
 
 # output produced by RStudio 2025.05 on MacBook
 
@@ -180,40 +180,41 @@ if (caseN == 14) {
 }
 
 # Indices for rho = 0.9, 0.95, 0.99
-idx <- which(my_table5$rho %in% c(0.9, 0.95, 0.99))
+idx <- which(my_table6$rho %in% c(0.9, 0.95, 0.99))
 
 # Extract sigma_0 and b_0 for selected rhos
-sigma2_0_sel <- my_table5$sigma_0[idx]^2
-b_0_sel <- my_table5$b_0[idx]
+sigma2_0_sel <- my_table6$sigma_0[idx]^2
+b_0_sel <- my_table6$b_0[idx]
 
 # Compute combined posterior
 sigma_1 <- sqrt((sigma2_0_sel * sigma_2^2) / (sigma2_0_sel - sigma_2^2))
 b_1 <- (sigma2_0_sel * b_2 - sigma_2^2 * b_0_sel) / (sigma2_0_sel - sigma_2^2)
 
-# Construct Table 6
-my_table6 <- rbind(
-  cbind(my_table5$rho[idx], b_1, sigma_1),
+# Construct Table 7 prior
+my_table7 <- rbind(
+  cbind(my_table6$rho[idx], b_1, sigma_1),
   c(1.0, b_2, sigma_2)
 )
 
-colnames(my_table6) <- c("rho", "b_1", "sigma_1")
-my_table6 <- as.data.frame(my_table6)
+colnames(my_table7) <- c("rho", "b_1", "sigma_1")
+my_table7 <- as.data.frame(my_table7)
 
 # Rounded version
-my_table6_rounded <- round(my_table6, 2)
+my_table7_rounded <- round(my_table7, 2)
 
 # output produced by RStudio 2025.05 on MacBook
 
-# Table 6: IPCC5
+# Table 7: IPCC5
 #  rho  b_1 sigma_1
 # 0.90 0.83    0.85
 # 0.95 1.00    0.64
 # 0.99 1.06    0.55
 # 1.00 1.07    0.53
 
-# Table 6: IPCC6
+# Table 7: IPCC6
 #  rho  b_1 sigma_1
 # 0.90 1.66    0.67
 # 0.95 1.24    0.36
 # 0.99 1.16    0.28
 # 1.00 1.15    0.27
+
