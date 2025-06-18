@@ -17,11 +17,16 @@ close all;
 caseN = 14; % 14 for IPCC5 data, 4 for IPCC6; 
             % doesn't work for other choices
             % the number corresponds to the number of points and used later in the program
+            % at the referee request added 15: IPCC5 with the first point
 
 if caseN == 14
     % IPCC5 data without the first point
     b_0i = [0.68; 0.72; 0.72; 0.99; 0.97; 0.75; 0.89; 1.17; 0.93; 0.99; 1.09; 1.23; 1.15; 1.02];
     sigma_0i = [0.21; 0.33; 0.44; 0.18; 0.22; 0.52; 0.43; 0.08; 0.45; 0.40; 0.26; 0.17; 0.28; 0.47];
+elseif caseN == 15 
+    % IPCC5 data with the first point
+    b_0i = [-0.30; 0.68; 0.72; 0.72; 0.99; 0.97; 0.75; 0.89; 1.17; 0.93; 0.99; 1.09; 1.23; 1.15; 1.02];
+    sigma_0i = [0.20; 0.21; 0.33; 0.44; 0.18; 0.22; 0.52; 0.43; 0.08; 0.45; 0.40; 0.26; 0.17; 0.28; 0.47];
 elseif caseN == 4
     % IPCC6 data
     b_0i = [1.22; 1.03; 1.2; 1.05];
@@ -82,7 +87,7 @@ subplot(3,1,3); plot(r_set, tau2_hat_set,'LineWidth',2); hold on; plot(lim_r,lim
 
 
 % find \rho where \sigma_0 = \sigma_2, i.e., prior variance matches the posterior
-if caseN == 14
+if (caseN == 14)||(caseN == 15)
     tmp = (sigma2_hat_set - 0.2809).^2; % sigma_2^2 =  0.2809 for IPCC5
 elseif caseN == 4
     tmp = (sigma2_hat_set - 0.0729).^2; % sigma_2^2 =  0.0729 for IPCC6
@@ -93,15 +98,15 @@ end
 r_tmp = r_set(I); % correlation of the threshold case where var of data = var of posterior for Section 5
 
 
-%% create Table 5 for the paper
+%% create Table 6 for the paper
 
-% get estimators for correlation values used in Table 5
+% get estimators for correlation values used in Table 6
 r_0 = [0; 0.5; 0.6; 0.7; 0.8; r_tmp; 0.9; 0.95; 0.99];
 mu_hat_0 = spline(r_set, mu_hat_set, r_0); % corresponds to b_0 in the table
 sigma2_hat_0 = spline(r_set, sigma2_hat_set, r_0); % corresponds to \sigma_0 in the table
 tau2_hat_0 = spline(r_set, tau2_hat_set, r_0); % corresponds to \tau in the table
 
-% create Table 5 for the paper
+% create Table 6 for the paper
 my_table6 = [r_0 mu_hat_0 sqrt(sigma2_hat_0) sqrt(tau2_hat_0)];
 my_table6 = [my_table6; ...
              lim_r lim_mu sqrt(lim_sigma2) sqrt(lim_tau2)];
@@ -110,6 +115,8 @@ my_table6 = [my_table6; ...
 my_table6_rounded = round(my_table6, 2);
 if caseN == 14
     disp("Table 6: IPCC5");
+elseif caseN == 15
+    disp("Table 6: IPCC5 (incl first point)");
 elseif caseN == 4
     disp("Table 6: IPCC6");
 else
@@ -143,9 +150,9 @@ disp(my_table6_rounded);
 %     0.99    1.01    0.92    0.21
 %     1.00    1.00     Inf    0.22
 
-%% create Table 6 for the paper
+%% create Table 7 for the paper
 
-if caseN == 14
+if (caseN == 14)||(caseN == 15)
     b_2 = 1.07;
     sigma_2 = 0.53;
 elseif caseN == 4
@@ -164,12 +171,19 @@ my_table7 = [my_table7; ...
 my_table7_rounded = round(my_table7, 2);
 if caseN == 14
     disp("Table 7: IPCC5 prior");
+elseif caseN == 15
+    disp("Table 7: IPCC5 prior (incl first point)")
 elseif caseN == 4
     disp("Table 7: IPCC6 prior");
 else
     error("not implemented yet")
 end
 disp(my_table7_rounded);
+
+% compute w
+%w = 1 - (sigma_2^2)./(my_table6(:,3).^2);
+%disp("Table 7: Input")
+%disp(round([my_table6 w], 2))
 
 %% output produced by Matlab R2024b on MacBook
 
